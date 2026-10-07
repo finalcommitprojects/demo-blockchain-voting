@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blockchain e-voting | Final Commit sample project</title>
+  <meta name="description" content="A student council election on a small blockchain: votes signed with each voter's key, sealed in mined blocks, and checked by every node. Change one vote and see where the chain breaks. A sample project by Final Commit." />
+  <link rel="icon" href="https://finalcommitprojects.github.io/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="f6b0f6cf-bb7f-4bd1-917e-acc1d8116251" data-domains="finalcommitprojects.github.io"></script>
+</head>
+<body>
+  <header class="top">
+    <p class="tag">Sample project · Blockchain</p>
+    <h1>Student council e-voting on a blockchain</h1>
+    <p class="sub">Each vote is signed with the voter's own key and sealed into a mined block. Change one vote later and the chain shows exactly where.</p>
+    <p class="mode">A small blockchain running in this page. The voters and the election are fictional, and nothing leaves your browser.</p>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="s1">
+      <h2 id="s1"><span class="step">1</span>Cast a signed vote</h2>
+      <p class="hint">Each voter has a key pair made on this device. The chain stores only an ID derived from the public key, never the name.</p>
+      <h3 class="lbl">Voter</h3>
+      <div id="voters" class="picks"></div>
+      <h3 class="lbl">Candidate</h3>
+      <div id="candidates" class="picks"></div>
+      <button id="cast" type="button" class="primary" data-umami-event="demo-vote-cast">Sign and submit vote</button>
+      <p id="vote-msg" class="msg" aria-live="polite"></p>
+    </section>
+
+    <section class="card" aria-labelledby="s2">
+      <h2 id="s2"><span class="step">2</span>Mine a block <span class="muted">(<span id="pool-count">0</span> pending)</span></h2>
+      <ul id="pool" class="pool"></ul>
+      <div class="row">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="3">3 zeros (instant)</option>
+          <option value="4">4 zeros (under a second)</option>
+          <option value="5">5 zeros (a few seconds)</option>
+        </select>
+        <button id="mine" type="button" class="primary" data-umami-event="demo-vote-mine">Mine block</button>
+      </div>
+      <p id="mine-msg" class="msg" aria-live="polite"></p>
+    </section>
+
+    <section class="card" aria-labelledby="s3">
+      <h2 id="s3"><span class="step">3</span>Results</h2>
+      <div id="tally" class="tally"></div>
+      <p id="tally-note" class="hint"></p>
+    </section>
+
+    <section aria-labelledby="s4" class="chain-wrap">
+      <h2 id="s4"><span class="step">4</span>The chain <span class="muted">(<span id="height">1</span> blocks)</span></h2>
+      <p class="hint">Try to cheat: change a vote in a mined block, then try to cover it up.</p>
+      <p id="story" class="story" aria-live="polite" hidden></p>
+      <div id="chain" class="chain"></div>
+    </section>
+
+    <section class="card how" aria-labelledby="s5">
+      <h2 id="s5">How it works</h2>
+      <ol>
+        <li><strong>Register.</strong> The genesis block lists the election, the candidates and the IDs of the registered voters.</li>
+        <li><strong>Sign.</strong> A vote is signed with the voter's private key (ECDSA P-256). Anyone can check it with their public key, but nobody can forge or change it without the private key.</li>
+        <li><strong>Mine.</strong> Pending votes go into a block with a Merkle root of their hashes. The miner tries nonces until the block's SHA-256 hash starts with enough zeros (proof of work).</li>
+        <li><strong>Link.</strong> Each block stores the hash of the one before it, so editing an old block breaks every link after it.</li>
+        <li><strong>Check.</strong> Before counting, every block is re-verified: hashes, links, proof of work, signatures, registered voters and one vote per voter.</li>
+      </ol>
+      <p class="hint">This demo runs one node in your browser so you can see each step. The full project usually adds a Solidity smart contract on an Ethereum test network, wallet sign-in with MetaMask, an admin panel to register voters and open or close the election, and the report and diagrams.</p>
+      <button id="reset" type="button" class="ghost" data-umami-event="demo-vote-reset">Start over with new keys</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>Sample project with a fictional election. Built by <a href="https://finalcommitprojects.github.io/?utm_source=demo&amp;utm_campaign=demo-blockchain-voting" data-umami-event="demo-to-site">Final Commit</a></p>
+  </footer>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
